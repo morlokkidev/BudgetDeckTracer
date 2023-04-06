@@ -21,7 +21,7 @@ def readWriteList():
         f = open('output.txt', 'a')
         newline = f"{line.strip()}{getCardPrice(line.strip())}"
         print(f"Writing line: {newline}")
-        f.write(f"{newline}{nl}")
+        f.write(f"{newline}{nl}")#TODO do not write nl for last line
         f.close()
     file.close()
 
@@ -36,7 +36,6 @@ def getCardPrice(card):
         print(cardDiv.a.get('href'))
         cardResult = requests.get(f"https://www.cardmarket.com{cardDiv.a.get('href')}")
         cardSoup = BeautifulSoup(cardResult.text, 'html.parser', parse_only=SoupStrainer(id="tabContent-info")).find("dl")
-        #print(cardSoup)
         cardDetailTable, cardDetailValue = cardSoup.find_all("dt"), cardSoup.find_all("dd")
         for x in enumerate(cardDetailTable):
             if fnmatch.filter(x[1], '*Price Trend*'):
@@ -55,9 +54,10 @@ def getCardPrice(card):
 #TODO use regex instead of multiples of replace
 def formatCard(card):
     print(f"original card name: {card}")
-    formatted = card.replace(" ", "-")
-    formatted = formatted.replace(",","")
-    formatted = formatted.replace("'","")
+    formatted = card.replace('-', '') #Remove dashes
+    formatted = formatted.replace(" ", "-") #Replace spaces with dashes
+    formatted = formatted.replace(",","") #Remove commas
+    formatted = formatted.replace("'","") #Remove apostrophe
     print(f"formatted card name: {formatted}")
     return formatted
 
